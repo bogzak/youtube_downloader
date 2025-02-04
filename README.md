@@ -85,6 +85,7 @@ Before running the program, ensure you have the following installed:
 
 ## Project Structure
 
+```
 project/
 │
 ├── main.py # Main entry point for the program
@@ -95,6 +96,7 @@ project/
 ├── .env # Environment variables (proxies)
 ├── video_urls.csv # Input file with video URLs
 └── video_metadata.csv # Output file with video metadata
+```
 
 - **main.py**: The main script to run the program.
 - **downloader.py**: Contains logic for downloading videos and handling proxies.
