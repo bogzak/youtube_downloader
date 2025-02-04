@@ -121,7 +121,7 @@ project/
 
 ### `video_urls.csv`
 Provide a list of YouTube video URLs in the following format:
-    ```csv
+    ```
     url
     https://www.youtube.com/watch?v=dQw4w9WgXcQ
     https://www.youtube.com/watch?v=another_video_id
