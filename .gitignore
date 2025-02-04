@@ -1,0 +1,6 @@
+files/
+videos/
+venv/
+.env
+tests.py
+po_token_cache.txt
