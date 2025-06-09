@@ -5,8 +5,10 @@ from metadata_saver import MetadataSaver
 from processor import YouTubeVideoProcessor
 from utils import read_video_urls_from_csv
 
+
 # Загрузка переменных окружения из .env файла
 load_dotenv()
+
 
 def main():
     # Инициализация компонентов
@@ -31,6 +33,7 @@ def main():
     for index, url in enumerate(video_urls, start=1):
         print(f"Обработка видео {index}/{len(video_urls)}: {url}")
         processor.process_video(url)
+
 
 if __name__ == "__main__":
     main()

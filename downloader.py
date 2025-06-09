@@ -1,3 +1,4 @@
+import mimetypes
 import os
 import random
 import subprocess
@@ -19,7 +20,6 @@ class VideoDownloader:
     Класс для скачивания видео с YouTube.
     Отвечает за загрузку видео в максимальном качестве.
     """
-
     def __init__(self):
         # Загрузка прокси из .env файла
         proxies_raw = os.getenv("PROXIES", "")
@@ -37,7 +37,8 @@ class VideoDownloader:
         # Загрузка visitorData и PoToken
         self.visitor_data, self.po_token = self.load_po_token_data()
 
-    def load_po_token_data(self):
+    @staticmethod
+    def load_po_token_data():
         """
         Загружает visitorData и PoToken из файла или запрашивает их у пользователя.
         :return: Кортеж (visitorData, PoToken).
@@ -83,7 +84,7 @@ class VideoDownloader:
         try:
             yt = YouTube(
                 url,
-                proxies=proxy,
+                # proxies=proxy,
                 use_po_token=True,
                 po_token_verifier=self.custom_po_token_verifier
             )
@@ -112,7 +113,8 @@ class VideoDownloader:
                 os.makedirs(output_path)
 
             # Выбираем видео-поток с максимальным качеством
-            video_stream = yt.streams.filter(adaptive=True, only_video=True).order_by("resolution").desc().first()
+            video_stream = yt.streams.filter(adaptive=True, only_video=True, mime_type="video/mp4").order_by("resolution").desc().first()
+            print(yt.streams.filter(adaptive=True, only_video=True))
             if not video_stream:
                 logging.error("Не удалось найти видео-поток.")
                 return None
@@ -130,9 +132,9 @@ class VideoDownloader:
             # Объединяем видео и аудио с помощью ffmpeg
             output_file = os.path.join(output_path, f"{yt.video_id}.mp4")
             subprocess.run([
-                "ffmpeg", "-i", video_path, "-i", audio_path,
-                "-c:v", "copy", "-c:a", "aac", output_file
-            ])
+                "ffmpeg", "-y", "-i", video_path, "-i", audio_path,
+                "-c:v", "copy", "-c:a", "aac", "-strict", "experimental", output_file
+            ], check=True)
 
             # Удаляем временные файлы
             os.remove(video_path)
