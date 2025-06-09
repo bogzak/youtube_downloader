@@ -113,7 +113,7 @@ class VideoDownloader:
                 os.makedirs(output_path)
 
             # Выбираем видео-поток с максимальным качеством
-            video_stream = yt.streams.filter(adaptive=True, only_video=True, mime_type="video/mp4").order_by("resolution").desc().first()
+            video_stream = yt.streams.filter(adaptive=True, only_video=True).order_by("resolution").desc().first()
             print(yt.streams.filter(adaptive=True, only_video=True))
             if not video_stream:
                 logging.error("Не удалось найти видео-поток.")
@@ -132,8 +132,13 @@ class VideoDownloader:
             # Объединяем видео и аудио с помощью ffmpeg
             output_file = os.path.join(output_path, f"{yt.video_id}.mp4")
             subprocess.run([
-                "ffmpeg", "-y", "-i", video_path, "-i", audio_path,
-                "-c:v", "copy", "-c:a", "aac", "-strict", "experimental", output_file
+                "ffmpeg", "-y",
+                "-i", video_path,
+                "-i", audio_path,
+                "-c:v", "copy",  # Копируем видеопоток без перекодирования
+                "-c:a", "aac",   # Перекодируем аудио в aac
+                "-strict", "experimental",
+                output_file
             ], check=True)
 
             # Удаляем временные файлы
